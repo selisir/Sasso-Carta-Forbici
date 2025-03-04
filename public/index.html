@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Sasso, Carta, Forbici!</title>
+    <style>
+        body {
+            font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #83a4d4, #b6fbff);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .hands {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin: 50px 0;
+            position: relative;
+        }
+
+        .hand-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .player-label {
+            font-size: 24px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        .user-label {
+            background: #3498db;
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .computer-label {
+            background: #e74c3c;
+            color: white;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .hand {
+            width: 200px;
+            height: 200px;
+            font-size: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-hand {
+            background: linear-gradient(145deg, #83a4d4, #b6fbff);
+            border: 4px solid #2980b9;
+        }
+
+        .computer-hand {
+            background: linear-gradient(145deg, #ff7675, #d63031);
+            border: 4px solid #c0392b;
+        }
+
+        .hand::after {
+            content: "";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            opacity: 0.2;
+        }
+
+        .user-hand::after {
+            content: "👤";
+        }
+
+        .computer-hand::after {
+            content: "🤖";
+        }
+
+        .score {
+            font-size: 28px;
+            margin: 30px;
+            color: #2c3e50;
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+        }
+
+        .score div:first-child {
+            color: #2980b9;
+            font-weight: bold;
+        }
+
+        .score div:last-child {
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        .choices button {
+            margin: 15px;
+            padding: 20px 40px;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            border-radius: 15px;
+            background: #3498db;
+            color: white;
+            transition: all 0.3s;
+            transform-style: preserve-3d;
+        }
+
+        .choices button:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .controls button {
+            margin: 15px;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 10px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .controls button:hover {
+            background: #27ae60;
+            transform: scale(1.05);
+        }
+
+        .leaderboard {
+            margin: 40px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            max-width: 400px;
+        }
+
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(-15deg); }
+            75% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .shaking {
+            animation: shake 0.5s infinite;
+        }
+
+        #result {
+            font-size: 32px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 30px;
+            min-height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Sasso, Carta, Forbici! ✂️</h1>
+        
+        <div class="score">
+            <div>Tu: <span id="user-score">0</span></div>
+            <div>Computer: <span id="computer-score">0</span></div>
+        </div>
+
+        <div class="hands">
+            <div class="hand-container">
+                <div class="player-label user-label">Tu</div>
+                <div id="user-hand" class="hand user-hand">✊</div>
+            </div>
+            <div class="hand-container">
+                <div class="player-label computer-label">Computer</div>
+                <div id="computer-hand" class="hand computer-hand">✊</div>
+            </div>
+        </div>
+
+        <div id="result" class="result"></div>
+
+        <div class="choices">
+            <button id="sasso">✊ Sasso</button>
+            <button id="carta">✋ Carta</button>
+            <button id="forbici">✌️ Forbici</button>
+        </div>
+
+        <div class="controls">
+            <button id="nuova-partita">Nuova Partita</button>
+            <button id="rigioca">Rigioca</button>
+            <button id="salva-classifica">Salva in Classifica</button>
+        </div>
+
+        <div class="leaderboard">
+            <h2>🏆 Classifica</h2>
+            <ol id="leaderboard-list"></ol>
+        </div>
+    </div>
+
+    <script>
+        let userScore = 0;
+        let computerScore = 0;
+        let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+        let isAnimating = false;
+
+        const hands = {
+            sasso: '✊',
+            carta: '✋',
+            forbici: '✌️'
+        };
+
+        const userHand = document.getElementById('user-hand');
+        const computerHand = document.getElementById('computer-hand');
+        const resultDiv = document.getElementById('result');
+        const buttons = document.querySelectorAll('.choices button');
+
+        document.querySelectorAll('.choices button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                if(!isAnimating) {
+                    playGame(e.target.id);
+                }
+            });
+        });
+
+        document.getElementById('nuova-partita').addEventListener('click', resetGame);
+        document.getElementById('rigioca').addEventListener('click', resetRound);
+        document.getElementById('salva-classifica').addEventListener('click', saveToLeaderboard);
+
+        function playGame(playerChoice) {
+            isAnimating = true;
+            buttons.forEach(btn => btn.disabled = true);
+            
+            userHand.textContent = '✊';
+            computerHand.textContent = '✊';
+            userHand.classList.add('shaking');
+            computerHand.classList.add('shaking');
+            resultDiv.textContent = '...';
+
+            setTimeout(() => {
+                const computerChoice = getComputerChoice();
+                const result = getResult(playerChoice, computerChoice);
+
+                userHand.textContent = hands[playerChoice];
+                computerHand.textContent = hands[computerChoice];
+                resultDiv.textContent = result;
+
+                userHand.classList.remove('shaking');
+                computerHand.classList.remove('shaking');
+                buttons.forEach(btn => btn.disabled = false);
+                isAnimating = false;
+
+                updateScores();
+            }, 3000);
+        }
+
+        function getComputerChoice() {
+            const choices = ['sasso', 'carta', 'forbici'];
+            return choices[Math.floor(Math.random() * 3)];
+        }
+
+        function getResult(player, computer) {
+            if (player === computer) return 'Pareggio! 😐';
+            
+            const rules = {
+                sasso: 'forbici',
+                carta: 'sasso',
+                forbici: 'carta'
+            };
+
+            return rules[player] === computer 
+                ? (userScore++, 'Hai vinto! 🎉') 
+                : (computerScore++, 'Computer vince! 🤖');
+        }
+
+        function updateScores() {
+            document.getElementById('user-score').textContent = userScore;
+            document.getElementById('computer-score').textContent = computerScore;
+        }
+
+        function resetGame() {
+            userScore = 0;
+            computerScore = 0;
+            updateScores();
+            resultDiv.textContent = '';
+            userHand.textContent = '✊';
+            computerHand.textContent = '✊';
+        }
+
+        function resetRound() {
+            resultDiv.textContent = '';
+            userHand.textContent = '✊';
+            computerHand.textContent = '✊';
+        }
+
+        function saveToLeaderboard() {
+            const name = prompt('Inserisci il tuo nome:');
+            if (name && userScore > 0) {
+                leaderboard.push({ name, score: userScore });
+                leaderboard.sort((a, b) => b.score - a.score);
+                localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+                updateLeaderboard();
+            }
+        }
+
+        function updateLeaderboard() {
+            const leaderboardList = document.getElementById('leaderboard-list');
+            leaderboardList.innerHTML = leaderboard
+                .slice(0, 5)
+                .map((entry, index) => `
+                    <li>${index + 1}. ${entry.name} - ${entry.score}</li>
+                `).join('');
+        }
+
+        updateLeaderboard();
+    </script>
+</body>
+</html>
