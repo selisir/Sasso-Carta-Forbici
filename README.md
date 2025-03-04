@@ -2,7 +2,7 @@
 
 Un classico gioco di Sasso-Carta-Forbici con classifica persistente!
 
-
+![Screenshot 2025-03-04 183444](https://github.com/user-attachments/assets/f67b9fde-2533-449d-b1d0-3079cbf8d9b7)
 
 ## 🚀 Come avviare
 1. Clona il repository:
