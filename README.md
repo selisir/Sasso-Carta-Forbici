@@ -4,6 +4,9 @@ Un classico gioco di Sasso-Carta-Forbici con classifica persistente!
 
 ![Screenshot 2025-03-04 183444](https://github.com/user-attachments/assets/f67b9fde-2533-449d-b1d0-3079cbf8d9b7)
 
+## 🕹️ UPDATE
+è disponibile il primo release !
+
 ## 🚀 Come avviare
 1. Clona il repository:
 ```bash
@@ -13,9 +16,9 @@ cd Sasso-Carta-Forbici
 Avvia il server Python:
 
 ``` bash
-Copy
+#Copy
 python3 server.py
-Apri nel browser:
+#Apri nel browser:
 http://localhost:8000
 ``` 
 
